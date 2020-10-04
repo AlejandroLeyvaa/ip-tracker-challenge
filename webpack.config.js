@@ -1,6 +1,8 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: './src/index.js',
@@ -20,19 +22,29 @@ module.exports = {
           loader: 'babel-loader',
         },
       },
-
       {
-        test: /\.jpg|png|gif|woff|eot|ttf|svg|mp4|mp3$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 90000,
-          },
-        },
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: ['file-loader'],
       },
     ],
   },
   plugins: [
+    new Dotenv({
+      path: './.env',
+    }),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'development',
+      DEBUG: false,
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.DEBUG': JSON.stringify(process.env.DEBUG),
+      'process.env.MAPBOX_API_KEY': JSON.stringify(process.env.MAPBOX_API_KEY),
+    }),
     new HtmlWebpackPlugin({
       inject: true,
       template: './public/index.html',
