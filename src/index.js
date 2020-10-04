@@ -1,9 +1,4 @@
 import './styles/styles.css';
-import pattern from './images/pattern-bg.png';
-
-
-const header = document.getElementById('header');
-header.style.backgroundImage = pattern;
 
 const map = () => {
   const accessKey = process.env.MAPBOX_API_KEY;
